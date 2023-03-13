@@ -2,7 +2,7 @@
 
 _NOTE_: This is for IS6200: Blockchain Technology and Business Application @ CityU IS.
 
-_Last updated: March 9th, 2023_
+_Last updated: March 13th, 2023_
 
 ---
 
@@ -56,6 +56,9 @@ Now, in this directory, run `curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.4.8
 Now you can follow tutorial 3 materials to run your first fabric network!
 
 # Run a Test Network
+
+_Last edit: use the default channel name (i.e., `mychannel`) instead of `c1`; name the chaincode as `basic` instead of `cc1` to be consistent with `main.go`_
+
 Before you can proceed, you may want to first run the following commands to see if the test network can start properly.
 
 ```bash
@@ -65,13 +68,14 @@ Before you can proceed, you may want to first run the following commands to see 
 # Create a channel:
 # `c1` is the channel name; you can change it to anything
 # if you do not specify `-c c1`, the channel will be set to mychannel by default`
-./network.sh createChannel -c c1
+# ./network.sh createChannel -c c1
+./network.sh createChannel
 
 # Deploy smart contract as chaincode onto the channel:
 # `-ccn` specifies the name of the deployed chaincode
 # `-ccp` specifies the path of the source code of the smart contract
 # `-ccl` specifies the programming language
-./network.sh deployCC -c c1 -ccn cc1 -ccp ../asset-transfer-basic/chaincode-go -ccl go
+./network.sh deployCC -c mychannel -ccn basic -ccp ../asset-transfer-basic/chaincode-go -ccl go
 
 # These `export` specify the binaries path and the fabric config path
 export PATH="${PWD}/../bin:${PATH}"
@@ -90,7 +94,7 @@ Now we can go ahead to initialize the ledger:
 ```bash
 # -C specifies the channel name
 # -n specifies the chaincode name
-peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" -C c1 -n cc1 --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt" -c '{"function":"InitLedger","Args":[]}'
+peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" -C mychannel -n basic --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt" -c '{"function":"InitLedger","Args":[]}'
 ```
 
 You are expected to see something like this in the terminal (note that a status code of 200 indicates success):
